@@ -1069,3 +1069,20 @@ This is the proc mobs get to turn into a ghost. Forked from ghostize due to comp
 		return
 
 	paiController.recruitWindow(src)
+
+// -- Require at least 2 players to start.
+
+/mob/dead/observer/verb/request_bomberman()
+	set name = "Request a bomberman arena"
+	set category = "Ghost"
+	set desc = "Create a bomberman arena for other observers and dead players."
+
+	if (ticker && ticker.current_state != GAME_STATE_PLAYING)
+		to_chat(src, "<span class ='notice'>You can't use this verb before the game has started.</span>")
+
+	if (arenas.len)
+		to_chat(src, "<span class ='notice'>There are already bomberman arenas! Use the Find Arenas verb to jump to them.</span>")
+
+	to_chat(src, "<span class='notice'>Pooling other ghosts for a bomberman arena...</span>")
+	var/datum/bomberman_arena/B = new /datum/bomberman_arena(locate(250, 250, 2), pick("15x13 (2 players)","15x15 (4 players)","39x23 (10 players)"), src)
+	arenas += B
